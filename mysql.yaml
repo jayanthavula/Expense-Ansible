@@ -13,5 +13,10 @@
       state: started
       enabled: yes
 
+  - name: Connect to mysql server
+    community.mysql.mysql_info:
+      login_user: root
+      login_password: ExpenseApp@1
+      login_host: mysql.jaydevops.online
 
         
