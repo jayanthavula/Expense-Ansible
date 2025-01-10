@@ -2,6 +2,14 @@
   hosts: mysql
   become: yes
   tasks:
+  - name: instal  mysql lib
+    ansible.builtin.pip:
+      name: "{{ item }}"
+    loop:
+    - cryptography
+    - PyMySQL
+    
+      
   - name: install mysql server
     ansible.builtin.package:
       name: mysql-server
