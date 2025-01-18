@@ -61,4 +61,11 @@
       login_password: ExpenseApp@1   
       login_host: mysql.jaydevops.online
       target: /app/schema/backend.sql
+
+  - name: daemon reload and restart service
+    ansbile.builtin.systemd_service:
+      enabled: true
+      state: restarted
+      daemon_reload: true
+      name: backend
        
