@@ -32,7 +32,7 @@
     ignore_errors: true
 
   - name: print the output
-    ansible.built.debug:
+    ansible.builtin.debug:
       msg: "Mysql info: {{ mysqlinfo }}" 
 
   - name: To set root password
