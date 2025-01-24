@@ -1,14 +1,14 @@
-- name: configure backend server
+- name: To configure backend server
   hosts: backend
   become: yes
   tasks:
-  - name: disable current nodejs
+  - name: To disable pervious nodejs module
     ansible.builtin.command: dnf module disable nodejs -y
 
-  - name: enable nodejs 20
+  - name: To enable nodejs 20 version module
     ansible.builtin.command: dnf module enable nodejs:20 -y
 
-  - name: install nodejs
+  - name: Install nodesjs and mysql
     ansible.builtin.package:
       name: "{{ item }}"
       state: present
@@ -16,27 +16,27 @@
     - nodejs
     - mysql
 
-  - name: create expense user
-    ansible.builtin.user:
-      name: expense
+  - name: Create user expense
+    ansible.builtin.user
+    name: expense
 
-  - name: Create app directory
+  - name: Create directory
     ansible.builtin.file:
-      path: /app
-      state: directory
+    path: /app
+    state: directory
 
-  - name: Download project backend code
+  - name: download source code
     ansible.builtin.get_url:
-      url: https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
-      dest: /tmp/backend.zip
-
-  - name: Unzip the backend zip file
+    url: https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
+    dest: /tmp/backend.zip
+  
+  - name: unzip the source code in remote backend server
     ansible.builtin.unarchive:
       src: /tmp/backend.zip
       dest: /app
       remote_src: yes
 
-  - name: install dependencies
+  - name: Install NPM dependencies
     community.general.npm:
       path: /app
 
@@ -45,28 +45,32 @@
       src: backend.service
       dest: /etc/systemd/system/backend.service
 
-  - name: install python libs
+  - name: Install python dependencies
     ansible.builtin.pip:
-      name: "{{ item }}"
-      executable: pip3.9
+     name: "{{ item }}"
     loop:
     - PyMySQL
-    - cryptography  
-       
-  - name: import sql data
+    - cryptography
+
+  - name: import mysql data
     community.mysql.mysql_db:
       state: import
       name: all
       login_user: root
-      login_password: ExpenseApp@1   
+      login_password: ExpenseApp@1
       login_host: mysql.jaydevops.online
       target: /app/schema/backend.sql
 
   - name: daemon reload and restart service
     ansible.builtin.systemd_service:
-      enabled: true
-      state: restarted
-      daemon_reload: true
-      name: backend
+    enabled: true
+    state: restarted
+    daemon_reload: true
+    name: backend
+          
 
-      
+
+
+
+
+

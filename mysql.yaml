@@ -1,4 +1,4 @@
-- name: MySQL playbook
+- name: To configure MySQL server
   hosts: mysql
   become: yes
   vars:
@@ -37,5 +37,5 @@
 
   - name: To set root password
     ansible.builtin.command: "mysql_secure_installation --set-root-pass {{ mysql_root_password }}"
-    when: mysqlinfo.failed is true    
-
+    when: mysqlinfo.failed is true
+    
