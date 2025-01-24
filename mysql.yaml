@@ -1,14 +1,41 @@
 - name: MySQL playbook
   hosts: mysql
   become: yes
+  vars:
+    mysql_root_password: ExpenseApp@1
+
   tasks:
-  - name: To install mysql DB on server
+  - name: To install binaries of mysql
+    ansible.builtin.pip:
+      name: {{ item }}
+    loop:
+    - cryptography
+    - PyMySQL
+
+  - name: To install mysql-server on server
     ansible.builtin.package:
-      name: mysql
+      name: mysql-server
       state: installed
 
   - name: To enable and start the mysql service
     ansible.builtin.service:
+      name: mysqld
       enabled: yes
-      name: mysql
-      state: start 
+      state: started
+
+  - name: Connect to mysql server
+    community.mysql.mysql_info:
+      login_user: root
+      login_password: ExpenseApp@1
+      login_host: mysql.jaydevops.online
+    register: mysqlinfo
+    ignore_errors: true
+
+  - name: print the output
+    ansible.built.debug:
+      msg: "Mysql info: {{ mysqlinfo }}" 
+
+  - name: To set root password
+    ansible.builtin.command: "mysql_secure_installation --set-root-pass {{ mysql_root_password }}"
+    when: mysqlinfo.failed is true    
+
