@@ -10,8 +10,8 @@
 
   - name: To enable and restart the service
     ansible.builtin.service:
-      state: present
       name: nginx
+      state: present
       enabled: yes
   
   - name: to remove deafault content in html directory
