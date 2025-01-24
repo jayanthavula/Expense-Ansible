@@ -7,7 +7,7 @@
   tasks:
   - name: To install binaries of mysql
     ansible.builtin.pip:
-      name: {{ item }}
+      name: "{{ item }}"
     loop:
     - cryptography
     - PyMySQL
